@@ -18,7 +18,7 @@ Sales Data: The primary dataset used for this analysis is the "Orders.csv" file,
 
 ### Tools
 
---Mysql
+Mysql
 
 ### Exploratory Data Analysis
 
@@ -46,14 +46,14 @@ FROM Orders
 )t WHERE row_num>1;
 ```
 
-it look like the RowId is unique, so it doesn't contain duplicates. So, lets's go to explore the data
+It looks like the RowId is unique, that means the data doesn't contain duplicates values. So, lets's go to explore the data
 ```sql
 SELECT
 	orderdate,
 	shipdate
 FROM Orders;
  ```
-change the orderdate and shipdate format
+Change the orderdate and shipdate format
 ```sql
 SELECT
 	orderdate,
@@ -62,14 +62,14 @@ SELECT
 	STR_TO_DATE(Shipdate, '%m/%d/%Y')
 FROM Orders; 
 ```
-use 'str_to_date' to update this field
+Use 'str_to_date' to update this field
 ```sql
 UPDATE Orders
 SET Orderdate = STR_TO_DATE(Orderdate, '%m/%d/%Y');
 UPDATE Orders
 SET Shipdate = STR_TO_DATE(Shipdate, '%m/%d/%Y'); 
 ```
-convert the data type properly
+Convert the data type properly
 ```sql
 ALTER TABLE Orders
 MODIFY COLUMN Orderdate date;
@@ -90,7 +90,7 @@ Find total sales and profit for each province
 SELECT
 	province,
 	productcategory,
-    COUNT(*) OVER(PARTITION BY province),
+    	COUNT(*) OVER(PARTITION BY province),
 	SUM(sales) OVER(PARTITION BY province) TotalSalesBYProvince,
 	SUM(profit) OVER(PARTITION BY province) TotalProfitBYProvince
 FROM Orders
@@ -133,7 +133,7 @@ ORDER BY TotalOrderQuantityByCustomer DESC;
 ```sql
 SELECT
 	productcategory,
-    productsubcategory,
+    	productsubcategory,
 	ROUND(SUM(profit) OVER(),2) TotalProfit,
 	ROUND(SUM(profit) OVER(PARTITION BY productsubcategory),2) TotalProfitByProductSubCategory
 FROM Orders
@@ -154,10 +154,10 @@ Find the Percentage contribution of each orders to the total sales
 ```sql
 SELECT
 	orderid,
-    orderdate,
+    	orderdate,
 	productcategory,
 	productname,
-    SUM(profit) OVER() TotalProfit,
+  	  SUM(profit) OVER() TotalProfit,
 	SUM(profit) OVER(PARTITION BY productcategory) TotalProfitByProductCategory,
 	ROUND(SUM(profit) OVER(PARTITION BY productcategory) / SUM(profit) OVER() * 100,2) PercentageOfTotal
 FROM Orders
@@ -185,7 +185,7 @@ FROM (
 SELECT
 	orderid,
 	orderdate,
-    productcategory,
+	productcategory,
     sales,
 	ROUND(AVG(sales) OVER(), 2) AvgSales
 FROM Orders
@@ -250,8 +250,8 @@ SELECT
 	Orderid,
 	orderdate,
 	productcategory,
-    productsubcategory,
-    productname,
+    	productsubcategory,
+    	productname,
 	ROUND(CUME_DIST() OVER(PARTITION BY productcategory ORDER BY profit DESC),4) DistRank
 FROM Orders
 )t WHERE DistRank <= 0.4;
@@ -267,10 +267,9 @@ FROM (
 SELECT
 	YEAR(orderdate) OrderYear,
 	SUM(profit) CurrentYearProfit,
-    LAG(SUM(profit)) OVER (ORDER BY YEAR(orderdate)) PreviousYearProfit
+    	LAG(SUM(profit)) OVER (ORDER BY YEAR(orderdate)) PreviousYearProfit
 FROM Orders
-GROUP BY
-	YEAR(orderdate)
+GROUP BY YEAR(orderdate)
     )t;
 ```
 Analyze the month-over-month performance by finding the percentage change
@@ -285,10 +284,10 @@ ROUND((CurrentMonthProfit - PreviousMonthProfit)/PreviousMonthProfit*100, 2) AS 
 FROM (
 SELECT
 	SUBSTRING(Orderdate, 1,7) Month,
-    SUM(sales) CurrentMonthSales,
-    SUM(profit) CurrentMonthProfit,
-    LAG(SUM(sales)) OVER (ORDER BY SUBSTRING(Orderdate, 1,7)) PreviousMonthSales,
-    LAG(SUM(profit)) OVER (ORDER BY SUBSTRING(Orderdate, 1,7)) PreviousMonthProfit
+    	SUM(sales) CurrentMonthSales,
+    	SUM(profit) CurrentMonthProfit,
+    	LAG(SUM(sales)) OVER (ORDER BY SUBSTRING(Orderdate, 1,7)) PreviousMonthSales,
+    	LAG(SUM(profit)) OVER (ORDER BY SUBSTRING(Orderdate, 1,7)) PreviousMonthProfit
 FROM Orders
 GROUP BY SUBSTRING(Orderdate, 1,7)
 )t;
