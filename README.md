@@ -53,6 +53,7 @@ SELECT
 	shipdate
 FROM Orders;
  ```
+change the orderdate and shipdate format
 ```sql
 SELECT
 	orderdate,
@@ -61,7 +62,7 @@ SELECT
 	STR_TO_DATE(Shipdate, '%m/%d/%Y')
 FROM Orders; 
 ```
-use str to date to update this field
+use 'str_to_date' to update this field
 ```sql
 UPDATE Orders
 SET Orderdate = STR_TO_DATE(Orderdate, '%m/%d/%Y');
@@ -75,15 +76,17 @@ MODIFY COLUMN Orderdate date;
 ALTER TABLE Orders
 MODIFY COLUMN Shipdate date;
 ```
+Find the range of orderdate and shipdate
 ```sql
 SELECT 
 	MAX(orderdate), 
 	MIN(orderdate),
-    MAX(shipdate), 
+    	MAX(shipdate), 
 	MIN(shipdate)
 FROM Orders; 
 ```
 Find total sales and profit for each province
+```sql
 SELECT
 	province,
 	productcategory,
@@ -91,11 +94,19 @@ SELECT
 	SUM(sales) OVER(PARTITION BY province) TotalSalesBYProvince,
 	SUM(profit) OVER(PARTITION BY province) TotalProfitBYProvince
 FROM Orders
-ORDER BY TotalSalesBYProvince, TotalProfitBYProvince; 
-
--- Find the total number of Orders
--- Find the total number of Orders for each Product Name
--- Additionally provide defauls such product name and order date
+ORDER BY TotalSalesBYProvince, TotalProfitBYProvince;
+```
+Find total sales based on customer segmentation
+```sql
+SELECT 
+	customersegment,
+	SUM(sales) OVER(PARTITION BY customersegment) TotalsalesBycustomersegment,
+	SUM(profit) OVER(PARTITION BY customersegment) TotalProfitBycustomersegment
+FROM Orders
+ORDER BY TotalProfitBycustomersegment DESC;
+```
+Find the total number of Orders and total number of Orders for each Product Name
+```sql
 SELECT
 	Orderdate,
 	productcategory,
@@ -103,20 +114,23 @@ SELECT
 	COUNT(*) OVER() TotalOrders,
 	COUNT(*) OVER(PARTITION BY productname) TotalOrdersByProductName
 FROM Orders
-ORDER BY TotalOrdersByProductName DESC; 
+ORDER BY TotalOrdersByProductName DESC;
+```
 
--- Find total number of orders for each customers
+Find total number of orders for each customers
+```sql
 SELECT
 	orderid,
 	orderdate,
 	customername,
-    productcategory,
+    	productcategory,
 	productname,
 	COUNT(*) OVER(PARTITION BY customername) TotalOrderByCustomer,
 	SUM(orderquantity) OVER(PARTITION BY customername) TotalOrderQuantityByCustomer
 FROM Orders
 ORDER BY TotalOrderQuantityByCustomer DESC;
-
+```
+```sql
 SELECT
 	productcategory,
     productsubcategory,
@@ -124,16 +138,20 @@ SELECT
 	ROUND(SUM(profit) OVER(PARTITION BY productsubcategory),2) TotalProfitByProductSubCategory
 FROM Orders
 ORDER BY TotalProfitByProductSubCategory DESC;
+```
 
--- Find total profit for each month
+Find total profit for each month
+```sql
 SELECT
 	SUBSTRING(Orderdate, 1,7) Month, 
 	SUM(profit) TotalProfit
 FROM Orders
 GROUP BY SUBSTRING(Orderdate, 1,7)
 ORDER BY 1 ASC;
+```
 
--- Find the Percentage contribution of each orders to the total sales
+Find the Percentage contribution of each orders to the total sales
+```sql
 SELECT
 	orderid,
     orderdate,
@@ -144,7 +162,8 @@ SELECT
 	ROUND(SUM(profit) OVER(PARTITION BY productcategory) / SUM(profit) OVER() * 100,2) PercentageOfTotal
 FROM Orders
 ORDER BY PercentageOfTotal DESC;
-
+```
+```sql
 SELECT
 	customername,
 	productname,
@@ -156,19 +175,10 @@ SELECT
 	ROUND(SUM(sales) OVER(PARTITION BY customername) / SUM(sales) OVER() * 100,2) PercentageOfTotalSales
 FROM Orders
 ORDER BY TotalOrdersByCustomer DESC;
+```
 
--- And find the average sales for each productcategory
--- Additionally provide details such orderID, orderdate
-SELECT
-	orderid,
-	orderdate,
-    productcategory,
-	sales,
-	ROUND(AVG(sales) OVER(), 2) AvgSales,
-	ROUND(AVG(sales) OVER(PARTITION BY productcategory), 2) AvgSalesByProductsCategory
-FROM Orders;
-
--- Find all orders where sales amount are higher than the average sales across all orders
+Find all orders where sales amount are higher than the average sales across all orders
+```sql
 SELECT
 *
 FROM (
@@ -182,8 +192,9 @@ FROM Orders
 )t 
 WHERE sales > AvgSales
 ORDER BY sales DESC;
-
--- Find the deviation of each amount sales from minimum and maximum amount sales
+```
+Find the deviation of each amount sales from minimum and maximum amount sales
+```sql
 SELECT
 	productsubcategory,
 	orderdate,
@@ -192,22 +203,27 @@ SELECT
 	sales - MIN(sales) OVER() DeviationFromMin,
 	MAX(sales) OVER() - sales DeviationFromMax
 FROM Orders;
-
--- Find top 10 Orders based on their profit 
+```
+Find top 10 Orders based on their profit 
+```sql
 SELECT
 	*,
 	DENSE_RANK() OVER(ORDER BY profit DESC) ProfitRank_Dense
 FROM Orders
 LIMIT 10;
+```
 
--- Find 10 Lowest Orders based on their profit 
+Find 10 Lowest Orders based on their profit 
+```sql
 SELECT
 	*,
 	DENSE_RANK() OVER(ORDER BY profit DESC) ProfitRank_Dense
 FROM Orders
 ORDER BY ProfitRank_Dense DESC
 LIMIT 10;
-
+```
+Rank total profit by Product Category for each year
+```sql
 WITH Profit_Year (productcategory,years, profit) AS
 (
 SELECT 
@@ -223,8 +239,10 @@ GROUP BY productcategory, YEAR(orderdate)
 FROM Profit_Year
 )
 SELECT * FROM Profit_Year_Rank;
+```
 
--- Find the products that fall within the highest 40% of the profit
+Find the products that fall within the highest 40% of the profit
+```sql
 SELECT
 *
 FROM (
@@ -237,9 +255,10 @@ SELECT
 	ROUND(CUME_DIST() OVER(PARTITION BY productcategory ORDER BY profit DESC),4) DistRank
 FROM Orders
 )t WHERE DistRank <= 0.4;
-
--- Analyze the year-over-year performance by finding the percentage change
--- in profit between the current and previous year
+```
+Analyze the year-over-year performance by finding the percentage change
+in profit between the current and previous year
+```sql
 SELECT
 *,
 CurrentYearProfit - PreviousYearProfit AS YoY_Change,
@@ -253,21 +272,27 @@ FROM Orders
 GROUP BY
 	YEAR(orderdate)
     )t;
-
--- Analyze the month-over-month performance by finding the percentage change
--- in profit between the current and previous month
+```
+Analyze the month-over-month performance by finding the percentage change
+in sales and profit between the current and previous year
+```sql
 SELECT
 *,
-CurrentMonthProfit - PreviousMonthProfit AS MoM_Change,
-ROUND((CurrentMonthProfit - PreviousMonthProfit)/PreviousMonthProfit*100, 2) AS MoM_Percentage
+CurrentMonthSales - PreviousMonthSales AS MoM_Sales_Change,
+ROUND((CurrentMonthSales - PreviousMonthSales)/PreviousMonthSales*100, 2) AS MoM_Sales_Percentage,
+CurrentMonthProfit - PreviousMonthProfit AS MoM_Profit_Change,
+ROUND((CurrentMonthProfit - PreviousMonthProfit)/PreviousMonthProfit*100, 2) AS MoM_Profit_Percentage
 FROM (
 SELECT
-	SUBSTRING(Orderdate, 1,7) Month, 
+	SUBSTRING(Orderdate, 1,7) Month,
+    SUM(sales) CurrentMonthSales,
     SUM(profit) CurrentMonthProfit,
+    LAG(SUM(sales)) OVER (ORDER BY SUBSTRING(Orderdate, 1,7)) PreviousMonthSales,
     LAG(SUM(profit)) OVER (ORDER BY SUBSTRING(Orderdate, 1,7)) PreviousMonthProfit
 FROM Orders
 GROUP BY SUBSTRING(Orderdate, 1,7)
 )t;
+```
 
 ### Result/Findings
 
