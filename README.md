@@ -298,9 +298,11 @@ GROUP BY SUBSTRING(Orderdate, 1,7)
 
 ### Result/Findings
 
-1. The company's sales and profit have been steadily increasing over the past year
-2.  Product Category Tecnology is the best performing category in terms of sales and profit with Telephones and communication is the highest subcategory sold
-3.  Customer segment **corporate** should be targeted for marketing efforts
+1. The company's sales and profit month-over-month performance is very unstable.
+   The largest increase in sales was 100.72% and profits increased 121.32% which occurred between August 2010 to September 2020,
+   while the largest sales loss, which decreased -48.08%, was in April 2009 to May 2009 and profits decreased -74.76%.
+3.  Product Category **Tecnology** is the best performing category in terms of sales and profit with **Telephones and communication** is the highest subcategory sales
+4.  Customer segment **corporate** should be targeted for marketing efforts
 
 ### Recommendation
 
