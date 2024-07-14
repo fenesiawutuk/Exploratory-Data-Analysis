@@ -34,7 +34,7 @@ Include some interesting code/features worked with
 
 SELECT * FROM Orders;
 
-#### Let's check for duplicates first
+Let's check for duplicates first
 SELECT *
 FROM (
 SELECT *,
@@ -42,8 +42,8 @@ SELECT *,
 FROM Orders
 )t WHERE row_num>1;
 
-##### it look like the RowId is unique, so it doesn't contain duplicates
-##### So, lets's go to explore the data
+it look like the RowId is unique, so it doesn't contain duplicates
+So, lets's go to explore the data
 
 SELECT
 	orderdate,
