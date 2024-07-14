@@ -130,6 +130,7 @@ SELECT
 FROM Orders
 ORDER BY TotalOrderQuantityByCustomer DESC;
 ```
+Find total profit by product subcategory
 ```sql
 SELECT
 	productcategory,
@@ -163,6 +164,7 @@ SELECT
 FROM Orders
 ORDER BY PercentageOfTotal DESC;
 ```
+Find the customers with highest total of orders and highest sales
 ```sql
 SELECT
 	customername,
@@ -174,7 +176,8 @@ SELECT
 	COUNT(*) OVER(PARTITION BY customername) / COUNT(*) OVER() * 100 PercentageOfTotalOrders,
 	ROUND(SUM(sales) OVER(PARTITION BY customername) / SUM(sales) OVER() * 100,2) PercentageOfTotalSales
 FROM Orders
-ORDER BY TotalOrdersByCustomer DESC;
+ORDER BY TotalOrdersByCustomer DESC
+LIMIT 1;
 ```
 
 Find all orders where sales amount are higher than the average sales across all orders
@@ -273,7 +276,7 @@ GROUP BY YEAR(orderdate)
     )t;
 ```
 Analyze the month-over-month performance by finding the percentage change
-in sales and profit between the current and previous year
+in sales and profit between the current and previous month
 ```sql
 SELECT
 *,
@@ -296,15 +299,15 @@ GROUP BY SUBSTRING(Orderdate, 1,7)
 ### Result/Findings
 
 1. The company's sales and profit have been steadily increasing over the past year
-2.  Product Category Tecnology is the best performing category in terms of sales and profit
-3.  Customer segment corporate should be targeted for marketing efforts
+2.  Product Category Tecnology is the best performing category in terms of sales and profit with Telephones and communication is the highest subcategory sold
+3.  Customer segment **corporate** should be targeted for marketing efforts
 
 ### Recommendation
 
 Based on the analysis, we reccomend the following actions:
 - Invest in marketing and promotions during peak sales season to maximize profit
-- Focus on expanding and promoting products in Category Technology
-- Implement a customer segmentation strategy to target corporate customers effectively
+- Focus on expanding and promoting products in Category Technology escpecialy Telephone and Communiation Subcategory
+- Implement a customer segmentation strategy to target **corporate** customers effectively
 
 
 
