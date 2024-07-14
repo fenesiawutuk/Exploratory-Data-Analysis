@@ -32,51 +32,58 @@ EDA involved the sales data to answear key question, such as:
 
 Include some interesting code/features worked with
 
+```sql
 SELECT * FROM Orders;
+```
 
 Let's check for duplicates first
+```sql
 SELECT *
 FROM (
 SELECT *,
 	ROW_NUMBER() OVER(PARTITION BY rowid ) row_num
 FROM Orders
 )t WHERE row_num>1;
+```
 
-it look like the RowId is unique, so it doesn't contain duplicates
-So, lets's go to explore the data
-
+it look like the RowId is unique, so it doesn't contain duplicates. So, lets's go to explore the data
+```sql
 SELECT
 	orderdate,
 	shipdate
-FROM Orders; 
-
+FROM Orders;
+ ```
+```sql
 SELECT
 	orderdate,
 	shipdate,
 	STR_TO_DATE(Orderdate, '%m/%d/%Y'),
 	STR_TO_DATE(Shipdate, '%m/%d/%Y')
 FROM Orders; 
-
--- use str to date to update this field
+```
+use str to date to update this field
+```sql
 UPDATE Orders
 SET Orderdate = STR_TO_DATE(Orderdate, '%m/%d/%Y');
 UPDATE Orders
 SET Shipdate = STR_TO_DATE(Shipdate, '%m/%d/%Y'); 
-
--- convert the data type properly
+```
+convert the data type properly
+```sql
 ALTER TABLE Orders
 MODIFY COLUMN Orderdate date;
 ALTER TABLE Orders
 MODIFY COLUMN Shipdate date;
-
+```
+```sql
 SELECT 
 	MAX(orderdate), 
 	MIN(orderdate),
     MAX(shipdate), 
 	MIN(shipdate)
 FROM Orders; 
-
--- Find total sales and profit for each province
+```
+Find total sales and profit for each province
 SELECT
 	province,
 	productcategory,
