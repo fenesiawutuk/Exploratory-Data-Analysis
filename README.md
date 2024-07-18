@@ -301,15 +301,21 @@ GROUP BY SUBSTRING(Orderdate, 1,7)
 1. The company's sales and profit month-over-month performance is very unstable.
    The largest increase in sales was 100.72% and profits increased 121.32% which occurred between August 2010 to September 2010,
    while the largest sales loss, which decreased -48.08%, was in April 2009 to May 2009 and profits decreased -74.76%.
-3.  Product Category **Tecnology** is the best performing category in terms of sales and profit with **Telephones and communication** is the highest subcategory sales
-4.  Customer segment **corporate** should be targeted for marketing efforts
+2.  Product Category **Tecnology** is the best performing category in terms of sales and profit with **Telephones and communication** is the highest subcategory sales
+3.  Customer segment **corporate** should be targeted for marketing efforts
 
 ### Recommendation
 
 Based on the analysis, we reccomend the following actions:
-- Invest in marketing and promotions during peak sales season to maximize profit
-- Focus on expanding and promoting products in Category Technology escpecialy Telephone and Communiation Subcategory
-- Implement a customer segmentation strategy to target **corporate** customers effectively
+
+- Stabilizing Month-over-Month Performance:
+The period from August 2010 to September 2010 showed significant increases in sales (100.72%) and profits (121.32%). This case study can be used as a reference to identify factors that support good performance and adopt strategies from that period to achieve more consistent monthly performance.
+
+- Focus on Technology Category and Telephones and Communication Subcategory:
+The Technology category has proven to be the best-performing category in terms of sales and profit. Considering Telephones and Communication as the subcategory with the highest sales, marketing efforts can be strengthened in this subcategory to maximize the potential of this profitable market.
+
+- Targeting Corporate Customer Segment:
+The corporate customer segment shows good potential for further marketing efforts. By focusing on this segment, the company can increase market penetration by offering solutions tailored to their business needs, potentially significantly increasing sales.
 
 
 
