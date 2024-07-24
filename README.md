@@ -299,6 +299,119 @@ FROM Orders
 GROUP BY SUBSTRING(Orderdate, 1,7)
 )t;
 ```
+```sql
+Returning customers within the first 30 days
+CREATE TEMPORARY TABLE customer_orders AS
+SELECT
+    customername,
+    orderdate,
+    DATE_FORMAT(orderdate, '%Y-%m') AS month,
+    DATE_FORMAT(MIN(orderdate) OVER (PARTITION BY customername), '%Y-%m') AS cohort,
+    DATEDIFF(orderdate, MIN(orderdate) OVER (PARTITION BY customername)) AS days_since_first_order
+FROM orders;
+```
+```sql
+SELECT
+    cohort,
+    COUNT(DISTINCT customername) AS num_returning_customers
+FROM customer_orders
+WHERE days_since_first_order > 0 AND days_since_first_order <= 30
+GROUP BY cohort
+ORDER BY cohort;
+```
+Calculating retention for customers who receive a discount
+```sql
+SELECT
+    cohort,
+    month,
+    COUNT(DISTINCT customername) AS num_customers_with_discount
+FROM (
+    SELECT
+        customername,
+        DATE_FORMAT(MIN(orderdate), '%Y-%m') AS cohort,
+        DATE_FORMAT(orderdate, '%Y-%m') AS month,
+        discount
+    FROM orders
+    GROUP BY customername, DATE_FORMAT(orderdate, '%Y-%m'), discount
+) t
+WHERE discount != 0
+GROUP BY cohort, month
+ORDER BY cohort, month;
+```
+Calculating retention for customers who did not receive a discount
+```sql
+SELECT
+    cohort,
+    month,
+    COUNT(DISTINCT customername) AS num_customers_without_discount
+FROM (
+    SELECT
+        customername,
+        DATE_FORMAT(MIN(orderdate), '%Y-%m') AS cohort,
+        DATE_FORMAT(orderdate, '%Y-%m') AS month,
+        discount
+    FROM orders
+    GROUP BY customername, DATE_FORMAT(orderdate, '%Y-%m'), discount
+) t
+WHERE discount = 0
+GROUP BY cohort, month
+ORDER BY cohort, month;
+```
+```sql
+Percentage Decline in Customer Retention
+WITH
+    discount_retention AS (
+        SELECT
+            cohort,
+            month,
+            COUNT(DISTINCT customername) AS num_customers_with_discount
+        FROM (
+            SELECT
+                customername,
+                DATE_FORMAT(MIN(orderdate), '%Y-%m') AS cohort,
+                DATE_FORMAT(orderdate, '%Y-%m') AS month,
+                discount
+            FROM orders
+            GROUP BY customername, DATE_FORMAT(orderdate, '%Y-%m'), discount
+        ) t
+        WHERE discount != 0
+        GROUP BY cohort, month
+    ),
+    no_discount_retention AS (
+        SELECT
+            cohort,
+            month,
+            COUNT(DISTINCT customername) AS num_customers_without_discount
+        FROM (
+            SELECT
+                customername,
+                DATE_FORMAT(MIN(orderdate), '%Y-%m') AS cohort,
+                DATE_FORMAT(orderdate, '%Y-%m') AS month,
+                discount
+            FROM orders
+            GROUP BY customername, DATE_FORMAT(orderdate, '%Y-%m'), discount
+        ) t
+        WHERE discount = 0
+        GROUP BY cohort, month
+    )
+SELECT
+    d.cohort,
+    d.month,
+    d.num_customers_with_discount,
+    n.num_customers_without_discount,
+    IFNULL(n.num_customers_without_discount, 0) AS no_discount_count,
+    IFNULL(d.num_customers_with_discount, 0) AS discount_count,
+    CASE 
+        WHEN d.num_customers_with_discount > 0 THEN
+            ((d.num_customers_with_discount - IFNULL(n.num_customers_without_discount, 0)) / d.num_customers_with_discount) * 100
+        ELSE
+            NULL
+    END AS percentage_decrease
+FROM discount_retention d
+LEFT JOIN no_discount_retention n
+    ON d.cohort = n.cohort AND d.month = n.month
+ORDER BY d.cohort, d.month;
+```
 
 ### Result/Findings
 
@@ -307,22 +420,38 @@ GROUP BY SUBSTRING(Orderdate, 1,7)
    while the largest sales loss, which decreased -48.08%, was in April 2009 to May 2009 and profits decreased -74.76%.
 2.  Product Category **Tecnology** is the best performing category in terms of sales and profit with **Telephones and communication** is the highest subcategory sales
 3.  Customer segment **corporate** should be targeted for marketing efforts
+4.  There is an average **80%** retention rate difference between customers who use discounts and those who do not
 
 ### Recommendation
 
-Based on the analysis, we reccomend the following actions:
+Based on the findings, here are some recommendations for stakeholders:
 
-- Stabilizing Month-over-Month Performance:
-The period from August 2010 to September 2010 showed significant increases in sales (100.72%) and profits (121.32%). This case study can be used as a reference to identify factors that support good performance and adopt strategies from that period to achieve more consistent monthly performance.
+**1. Sales and Profit Stability**
+   - Analyze the Causes of Fluctuations: Conduct a detailed analysis to understand the factors causing instability in month-over-month sales and profit performance. 
+     Identify seasonal trends, market changes, or external factors contributing to the fluctuations.
+   - Implement Stability Strategies: Develop strategies to reduce volatility, such as improved sales forecasting, product diversification, or more flexible pricing 
+     adjustments.
+   - Monitoring and Adjustment: Continuously monitor monthly performance and make periodic adjustments to strategies to ensure more stable results.
 
-- Focus on Technology Category and Telephones and Communication Subcategory:
-The Technology category has proven to be the best-performing category in terms of sales and profit. Considering Telephones and Communication as the subcategory with the highest sales, marketing efforts can be strengthened in this subcategory to maximize the potential of this profitable market.
+**2. Optimize Technology Product Category**
+   - Focus on Key Category: Enhance marketing and sales efforts for the Technology category, particularly the Telephones and Communication subcategory, which shows 
+     the best performance in terms of sales and profit.
+   - Invest in Innovation: Invest in new product development and innovation within this category to maintain market position and meet evolving customer needs.
+   - Expand Distribution Channels: Broaden distribution channels for technology products to reach a larger pool of potential customers.
 
-- Targeting Corporate Customer Segment:
-The corporate customer segment shows good potential for further marketing efforts. By focusing on this segment, the company can increase market penetration by offering solutions tailored to their business needs, potentially significantly increasing sales.
+**3. Target Corporate Customer Segment**
+   - Personalized Marketing Strategies: Develop targeted marketing campaigns for the corporate customer segment, offering solutions and promotions tailored to their 
+     needs.
+   - Special Offers for Corporates: Create special offers or discounts for corporate customers to encourage repeat purchases and enhance loyalty.
+   - Enhanced Customer Service: Provide better customer service and dedicated support for corporate clients to strengthen long-term relationships.
 
-
-
+**4. Improve Customer Retention Through Discounts**
+   - Optimize Discount Strategies: Utilize discount strategies to boost customer retention. Consider offering more frequent or attractive discounts to enhance appeal.
+   - Segmented Discounts: Implement personalized discounts based on customer data to maximize impact and relevance.
+   - Loyalty Programs: Develop loyalty programs that provide additional incentives for frequent buyers, whether they use discounts or not, to improve overall 
+     retention.
+     
+By implementing these recommendations, the company can enhance performance stability, capitalize on key product categories, strengthen relationships with important customer segments, and improve overall customer retention.
 
 
 
