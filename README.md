@@ -29,6 +29,15 @@ The primary dataset used for this analysis is the "Orders.csv" file.
 - Evaluate the impact of promotions and discounts.
 - Provide actionable insights for business improvement.
 
+### Project Steps
+- Data Collection: Gather and import data.
+- Data Cleaning and Preprocessing: Handle missing values, duplicates, and standardize formats.
+- Exploratory Data Analysis (EDA): Analyze sales trends, top products, customer segments, and visualize data.
+- Advanced Analysis: Perform market basket analysis to identify product associations, cohort analysis for customer retention.
+- Insights and Recommendations: Summarize findings and provide actionable recommendations.
+- Documentation and Reporting: Document the analysis process and results, create a comprehensive report.
+- Project Deployment: Upload the project to GitHub with a detailed README file.
+  
 ### Data Analysis
 
 Let's check for duplicates first
