@@ -13,28 +13,23 @@ an e-commerce company over the past year. By analyzing various aspects of the sa
 We seek to identify trends, make data-driven recommendation and gain a deeper understanding of the company's performance.
 
 ### Data Sources
-
-Sales Data: The primary dataset used for this analysis is the "Orders.csv" file, containing information about each sale made by the company.
+- Sales Transactions Data: Details of each transaction (transaction ID, date, product ID, customer ID, quantity, price, discount, total amount).
+- Product Information Data: Product details (product ID, category).
+- Customer Information Data: Customer details (customer ID, gender, location).
+The primary dataset used for this analysis is the "Orders.csv" file.
 
 ### Tools
+- Database Management: MySQL
+- Business Intelligence Tool: Tableau
 
-Mysql
-
-### Exploratory Data Analysis
-
-EDA involved the sales data to answear key question, such as:
-
-- What is the overall sales trends?
-- Which products are top sellers?
-- What are the peak sales periods?
+### Objectives
+- Analyze sales performance over different periods.
+- Identify top-selling products and categories.
+- Understand customer purchasing behavior.
+- Evaluate the impact of promotions and discounts.
+- Provide actionable insights for business improvement.
 
 ### Data Analysis
-
-Include some interesting code/features worked with
-
-```sql
-SELECT * FROM Orders;
-```
 
 Let's check for duplicates first
 ```sql
