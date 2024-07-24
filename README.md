@@ -357,8 +357,8 @@ WHERE discount = 0
 GROUP BY cohort, month
 ORDER BY cohort, month;
 ```
-```sql
 Percentage Decline in Customer Retention
+```sql
 WITH
     discount_retention AS (
         SELECT
