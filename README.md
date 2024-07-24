@@ -42,15 +42,14 @@ The primary dataset used for this analysis is the "Orders.csv" file.
 
 Let's check for duplicates first
 ```sql
-SELECT *
-FROM (
+SELECT * FROM
+(
 SELECT *,
-	ROW_NUMBER() OVER(PARTITION BY rowid ) row_num
-FROM Orders
-)t WHERE row_num>1;
+ROW_NUMBER() OVER(PARTITION BY rowid, ORDERID, Orderdate, ORDERPRIOTORITY, ORDERQUANTITY,CUSTOMERNAME,CUSTOMERSEGMENT,PRODUCTCATEGORY) row_nums
+FROM orders
+)t WHERE row_nums > 1;
 ```
-
-It looks like the RowId is unique, that means the data doesn't contain duplicates values. So, lets's go to explore the data
+We cannot have more than one row number, that means the data doesn't contain duplicates values. So, let's take a look to the date format
 ```sql
 SELECT
 	orderdate,
