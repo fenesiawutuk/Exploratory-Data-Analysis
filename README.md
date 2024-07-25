@@ -33,7 +33,7 @@ The primary dataset used for this analysis is the "Orders.csv" file.
 ### Project Steps
 - Data Collection: Gather and import data.
 - Data Cleaning and Preprocessing: Handle missing values, duplicates, and standardize formats.
-- Exploratory Data Analysis (EDA): Analyze sales trends, top products, customer segments, and visualize data.Y
+- Exploratory Data Analysis (EDA): Analyze sales trends, top products, customer segments, and visualize data.
 - Advanced Analysis: Cohort analysis for customer retention.
 - Insights and Recommendations: Summarize findings and provide actionable recommendations.
 - Documentation and Reporting: Document the analysis process and results, create a comprehensive report.
