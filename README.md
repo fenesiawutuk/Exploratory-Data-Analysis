@@ -39,7 +39,7 @@ The primary dataset used for this analysis is the "Orders.csv" file.
 - Documentation and Reporting: Document the analysis process and results, create a comprehensive report.
 - Project Deployment: Upload the project to GitHub with a detailed README file.
 
-You interact with the sales dashboard [here](https://public.tableau.com/app/profile/rika3647/viz/E-commerceSalesPerforance/Dashboard1)
+You can interact with the sales dashboard [here](https://public.tableau.com/app/profile/rika3647/viz/E-commerceSalesPerforance/Dashboard1)
 
  
 ### Result/Findings
