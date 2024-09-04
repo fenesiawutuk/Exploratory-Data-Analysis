@@ -47,7 +47,8 @@ You can interact with the sales dashboard [here](https://public.tableau.com/app/
 1. The company's sales and profit month-over-month performance is very unstable.
    The largest increase in sales was 100.72% and profits increased 121.32% which occurred between August 2010 to September 2010,
    while the largest sales loss, which decreased -48.08%, was in April 2009 to May 2009 and profits decreased -74.76%.
-2.  Product Category **Tecnology** is the best performing category in terms of sales and profit with **Telephones and communication** is the highest subcategory sales
+2. Technology is the leading category in terms of sales and profit, contributing 41.2% of total sales. Within this category, the Office Machines subcategory          
+   contributes approximately 15%, followed by Telephones and Communication at 13% of total sales
 3.  Customer segment **corporate** should be targeted for marketing efforts
 4.  There is an average **80%** retention rate difference between customers who use discounts and those who do not
 
